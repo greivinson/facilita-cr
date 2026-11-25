@@ -1,0 +1,30 @@
+# Dependencias y archivos de Node
+node_modules/
+.wrangler/
+dist/
+
+# Secretos y variables de entorno locales
+.dev.vars
+.env
+*.env
+.env.*
+!.env.example
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Editor
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.bak
+ofertas_filtradas.json
+consumo_semanal.md
+ai-fallback/history/model-catalog-history.jsonl

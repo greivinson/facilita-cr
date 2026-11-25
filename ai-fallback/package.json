@@ -1,0 +1,15 @@
+{
+  "name": "facilita-ai-fallback",
+  "version": "1.0.0",
+  "description": "Motor de IA en cascada con rotación de proveedores 100% gratuitos ($0/mes)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "test:credentials": "node --test credentials.test.js",
+    "test:catalog": "node --test catalog-discovery.test.js provider-call.test.js provider-cascade.test.js model-catalog.test.js refresh-model-catalog.test.js"
+  },
+  "keywords": ["ai-fallback", "gemini", "groq", "openrouter", "costa-rica"],
+  "author": "FacilitaCR",
+  "license": "ISC"
+}

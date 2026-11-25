@@ -1,0 +1,7 @@
+name = "facilita-database"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "facilita-cr"
+database_id = "b2a73693-048c-401f-a4f9-816ff3a10d32"

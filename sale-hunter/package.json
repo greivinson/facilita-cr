@@ -1,0 +1,14 @@
+{
+  "name": "sale-hunter",
+  "version": "1.0.0",
+  "description": "Motor modular de búsqueda y monitoreo de ofertas de tiendas USA -> CR (Subproyecto de FacilitaCR)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "hunt:adidas": "node hunters/adidas.js"
+  },
+  "keywords": ["deal-hunter", "personal-shopper", "adidas", "nike", "costa-rica"],
+  "author": "FacilitaCR",
+  "license": "ISC"
+}

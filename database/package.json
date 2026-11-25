@@ -1,0 +1,20 @@
+{
+  "name": "facilita-database",
+  "version": "1.0.0",
+  "description": "Gestión centralizada de Cloudflare D1 para FacilitaCR (esquemas, migraciones y seeds)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "db:apply": "wrangler d1 execute facilita-cr --remote --file=schema.sql",
+    "db:local": "wrangler d1 execute facilita-cr --local --file=schema.sql",
+    "db:tables": "wrangler d1 execute facilita-cr --remote --command=\"SELECT name FROM sqlite_master WHERE type='table';\"",
+    "db:config": "wrangler d1 execute facilita-cr --remote --command=\"SELECT * FROM configuracion;\"",
+    "db:pedidos": "wrangler d1 execute facilita-cr --remote --command=\"SELECT id, cliente, producto, total_crc, abono_crc, estado FROM pedidos ORDER BY fecha DESC LIMIT 10;\"",
+    "db:ofertas": "wrangler d1 execute facilita-cr --remote --command=\"SELECT id, tienda, producto_id_tienda, titulo, precio_sale_actual_usd, dias_en_sale, primera_deteccion FROM ofertas ORDER BY ultima_deteccion DESC LIMIT 10;\"",
+    "db:precios": "wrangler d1 execute facilita-cr --remote --command=\"SELECT * FROM ofertas_historial_precios ORDER BY fecha DESC LIMIT 10;\"",
+    "db:tipo-cambio": "wrangler d1 execute facilita-cr --remote --command=\"SELECT * FROM tipo_cambio_diario ORDER BY fecha DESC LIMIT 10;\""
+  },
+  "keywords": ["cloudflare-d1", "sqlite", "database", "facilitacr"],
+  "author": "FacilitaCR",
+  "license": "ISC"
+}
