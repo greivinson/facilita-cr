@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createModelCatalogCache } from "./model-catalog.js";
-import { selectRankedFreeTextModels } from "../database/model-catalog.js";
+import { selectRankedFreeTextModels } from "../shared/model-catalog.js";
 
 test("caches the D1 model catalog for the configured interval", async () => {
   let now = 100;

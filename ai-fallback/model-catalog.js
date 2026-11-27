@@ -1,5 +1,5 @@
-import { executeSql } from "../database/index.js";
-import { MODEL_CATALOG_PROVIDERS } from "../database/model-catalog.js";
+import { executeSql } from "../shared/d1.js";
+import { MODEL_CATALOG_PROVIDERS } from "../shared/model-catalog.js";
 
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
@@ -30,7 +30,7 @@ const loadCatalog = async () => {
   const rows = await executeSql(
     `SELECT provider, model_id, supports_text, active, is_free, priority_rank,
             ranking_status, functional_status, catalog_order
-     FROM ai_model_catalog
+     FROM catalogo_modelos_ia
      WHERE active = 1 AND supports_text = 1 AND is_free = 1
        AND functional_status != 'failed'
        AND (priority_rank BETWEEN 1 AND 5 OR ranking_status = 'standby')

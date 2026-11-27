@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { executeSql, executeSqlFile } from "../database/index.js";
+import { executeSql, executeSqlFile } from "../shared/d1.js";
 import { discoverProviderCatalog, PROVIDERS } from "./catalog-discovery.js";
 import { rankProviderModels } from "./model-ranking.js";
 import { appendCatalogHistory } from "./model-history.js";
@@ -62,7 +62,7 @@ function statusStatement(result) {
   const rankerProvider = result.ranker_provider ? quote(result.ranker_provider) : "NULL";
   const rankerModel = result.ranker_model_id ? quote(result.ranker_model_id) : "NULL";
   const rankingError = result.ranking_error ? quote(result.ranking_error) : "NULL";
-  return `INSERT INTO ai_model_catalog_status
+  return `INSERT INTO estado_catalogo_modelos_ia
     (provider, status, last_attempt_at, last_success_at, model_count, error_code, error_message,
      ranking_status, ranker_provider, ranker_model_id, ranking_error)
     VALUES (${quote(result.provider)}, ${status}, datetime('now'),
@@ -73,9 +73,9 @@ function statusStatement(result) {
       status = excluded.status,
       last_attempt_at = datetime('now'),
       last_success_at = CASE WHEN excluded.status = 'success'
-        THEN datetime('now') ELSE ai_model_catalog_status.last_success_at END,
+        THEN datetime('now') ELSE estado_catalogo_modelos_ia.last_success_at END,
       model_count = CASE WHEN excluded.status = 'success'
-        THEN excluded.model_count ELSE ai_model_catalog_status.model_count END,
+        THEN excluded.model_count ELSE estado_catalogo_modelos_ia.model_count END,
       error_code = excluded.error_code,
       error_message = excluded.error_message,
       ranking_status = excluded.ranking_status,
@@ -98,12 +98,12 @@ export function buildProviderCatalogSql(result, ranking = null) {
   const currentModels = catalogCandidates(result);
   const rankedIds = ranking?.status === "ranked" ? ranking.rankings[result.provider] || [] : null;
   const statements = [
-    `UPDATE ai_model_catalog SET active = 0, updated_at = datetime('now') WHERE provider = ${quote(result.provider)};`,
+    `UPDATE catalogo_modelos_ia SET active = 0, updated_at = datetime('now') WHERE provider = ${quote(result.provider)};`,
   ];
 
   if (rankedIds) {
     statements.push(
-      `UPDATE ai_model_catalog SET priority_rank = NULL, ranking_status = 'standby'
+      `UPDATE catalogo_modelos_ia SET priority_rank = NULL, ranking_status = 'standby'
        WHERE provider = ${quote(result.provider)};`
     );
   }
@@ -121,7 +121,7 @@ export function buildProviderCatalogSql(result, ranking = null) {
       : model.is_free === 1
         ? "ranking_skipped"
         : "excluded_not_free";
-    statements.push(`INSERT INTO ai_model_catalog
+    statements.push(`INSERT INTO catalogo_modelos_ia
       (provider, model_id, display_name, supports_text, is_free, context_length,
        input_price, output_price, catalog_order, metadata_json, active, discovered_at, updated_at,
       priority_rank, ranking_status, functional_status, functional_error)
@@ -140,23 +140,23 @@ export function buildProviderCatalogSql(result, ranking = null) {
        catalog_order = excluded.catalog_order, metadata_json = excluded.metadata_json,
        active = 1, discovered_at = datetime('now'), updated_at = datetime('now'),
        functional_status = CASE WHEN excluded.functional_status != 'unknown'
-         THEN excluded.functional_status ELSE ai_model_catalog.functional_status END,
+         THEN excluded.functional_status ELSE catalogo_modelos_ia.functional_status END,
        functional_error = CASE WHEN excluded.functional_status != 'unknown'
-         THEN excluded.functional_error ELSE ai_model_catalog.functional_error END,
+         THEN excluded.functional_error ELSE catalogo_modelos_ia.functional_error END,
        priority_rank = CASE WHEN excluded.functional_status = 'failed' THEN NULL
          WHEN ${rankedIds ? "1" : "0"} = 1
          THEN excluded.priority_rank
          WHEN excluded.is_free = 1 AND
-           (ai_model_catalog.priority_rank IS NOT NULL OR ai_model_catalog.ranking_status = 'standby')
-           THEN ai_model_catalog.priority_rank
+           (catalogo_modelos_ia.priority_rank IS NOT NULL OR catalogo_modelos_ia.ranking_status = 'standby')
+           THEN catalogo_modelos_ia.priority_rank
          ELSE NULL END,
        ranking_status = CASE WHEN excluded.functional_status = 'failed'
          THEN 'excluded_functional_failure'
          WHEN ${rankedIds ? "1" : "0"} = 1
          THEN excluded.ranking_status
          WHEN excluded.is_free = 1 AND
-           (ai_model_catalog.priority_rank IS NOT NULL OR ai_model_catalog.ranking_status = 'standby')
-         THEN ai_model_catalog.ranking_status
+           (catalogo_modelos_ia.priority_rank IS NOT NULL OR catalogo_modelos_ia.ranking_status = 'standby')
+         THEN catalogo_modelos_ia.ranking_status
          ELSE excluded.ranking_status END;`);
   }
 
@@ -182,7 +182,7 @@ export async function refreshModelCatalog({
 } = {}) {
   const results = await discoverProviderCatalog({ keys, freeModelIds, fetchImpl });
   const failedRows = await loadFunctionalFailuresFn(
-    "SELECT provider, model_id, functional_error FROM ai_model_catalog WHERE functional_status = 'failed'"
+    "SELECT provider, model_id, functional_error FROM catalogo_modelos_ia WHERE functional_status = 'failed'"
   );
   const knownFailures = new Map(
     failedRows.map((row) => [`${row.provider}\u0000${row.model_id}`, row.functional_error])

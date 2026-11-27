@@ -1,9 +1,12 @@
 {
   "name": "facilita-database",
   "version": "1.0.0",
-  "description": "Gestión centralizada de Cloudflare D1 para FacilitaCR (esquemas, migraciones y seeds)",
+  "description": "Comandos para administrar esquemas y migraciones de Cloudflare D1",
+  "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "db:apply": "wrangler d1 execute facilita-cr --remote --file=schema.sql",
     "db:local": "wrangler d1 execute facilita-cr --local --file=schema.sql",

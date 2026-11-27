@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Bot de Telegram para sistema de compras por encargo USA->CR (subproyecto de FacilitaCR)",
   "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",

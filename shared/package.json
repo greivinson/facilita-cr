@@ -1,0 +1,8 @@
+{
+  "name": "facilitacr-shared",
+  "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
+  "type": "module"
+}

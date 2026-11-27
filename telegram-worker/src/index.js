@@ -9,18 +9,18 @@ import {
   OPERATIONAL_CONFIG_KEYS,
   parseOperationalSetting,
   parseOperationalSettings,
-} from "../../database/config.js";
+} from "../../shared/config.js";
 import {
   selectInferenceFreeTextModels,
   selectRankedFreeTextModels,
-} from "../../database/model-catalog.js";
+} from "../../shared/model-catalog.js";
 
 async function getCandidateModels(db, provider = "google") {
   const rows = await db
     .prepare(
       `SELECT provider, model_id, supports_text, active, is_free, priority_rank,
               ranking_status, functional_status, catalog_order
-       FROM ai_model_catalog
+       FROM catalogo_modelos_ia
        WHERE provider = ? AND active = 1 AND supports_text = 1 AND is_free = 1
          AND functional_status != 'failed'
          AND (priority_rank BETWEEN 1 AND 5 OR ranking_status = 'standby')
@@ -41,7 +41,7 @@ async function getAvailableCatalogModels(db) {
          SELECT provider, model_id, supports_text, active, is_free, catalog_order,
                 priority_rank, ranking_status, functional_status,
                 ROW_NUMBER() OVER (PARTITION BY provider ORDER BY catalog_order) AS candidate_number
-         FROM ai_model_catalog
+         FROM catalogo_modelos_ia
          WHERE active = 1 AND supports_text = 1
        )
        WHERE candidate_number <= 7
@@ -57,7 +57,7 @@ async function getModelCatalogStatus(db) {
     .prepare(
       `SELECT provider, status, last_attempt_at, last_success_at, model_count, error_code, error_message,
               ranking_status, ranker_provider, ranker_model_id, ranking_error
-       FROM ai_model_catalog_status ORDER BY provider`
+       FROM estado_catalogo_modelos_ia ORDER BY provider`
     )
     .all();
   return rows.results || [];

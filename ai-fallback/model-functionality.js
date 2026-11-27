@@ -1,4 +1,4 @@
-import { executeSql } from "../database/index.js";
+import { executeSql } from "../shared/d1.js";
 import { invalidateModelCatalogCache } from "./model-catalog.js";
 
 function quote(value) {
@@ -15,7 +15,7 @@ function sanitize(message) {
 
 export async function recordModelFunctionalityFailure(provider, model, details, executeSqlFn = executeSql) {
   await executeSqlFn(
-    `UPDATE ai_model_catalog
+    `UPDATE catalogo_modelos_ia
      SET functional_status = 'failed',
          functional_error = ${quote(sanitize(details.message))},
          priority_rank = NULL,
@@ -28,7 +28,7 @@ export async function recordModelFunctionalityFailure(provider, model, details, 
 
 export async function recordModelFunctionalityPass(provider, model, executeSqlFn = executeSql) {
   await executeSqlFn(
-    `UPDATE ai_model_catalog
+    `UPDATE catalogo_modelos_ia
      SET functional_status = 'passed', functional_error = NULL, updated_at = datetime('now')
      WHERE provider = ${quote(provider)} AND model_id = ${quote(model)}`
   );

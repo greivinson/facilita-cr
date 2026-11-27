@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS configuracion (
 
 -- Los valores operativos se provisionan directamente en D1 y no se guardan en el repositorio.
 
-CREATE TABLE IF NOT EXISTS ai_model_catalog (
+CREATE TABLE IF NOT EXISTS catalogo_modelos_ia (
   provider TEXT NOT NULL CHECK (provider IN ('google', 'groq', 'openrouter')),
   model_id TEXT NOT NULL,
   display_name TEXT NOT NULL,
@@ -57,10 +57,10 @@ CREATE TABLE IF NOT EXISTS ai_model_catalog (
   PRIMARY KEY (provider, model_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_active
-  ON ai_model_catalog (provider, active, supports_text, is_free, priority_rank);
+CREATE INDEX IF NOT EXISTS idx_catalogo_modelos_ia_activos
+  ON catalogo_modelos_ia (provider, active, supports_text, is_free, priority_rank, functional_status);
 
-CREATE TABLE IF NOT EXISTS ai_model_catalog_status (
+CREATE TABLE IF NOT EXISTS estado_catalogo_modelos_ia (
   provider TEXT PRIMARY KEY CHECK (provider IN ('google', 'groq', 'openrouter')),
   status TEXT NOT NULL,
   last_attempt_at TEXT NOT NULL,

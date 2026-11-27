@@ -1,4 +1,4 @@
-import { executeSql } from "../database/index.js";
+import { executeSql } from "../shared/d1.js";
 import { callGoogleAI } from "./providers/google.js";
 import { callGroq } from "./providers/groq.js";
 import { callOpenRouter } from "./providers/openrouter.js";
@@ -87,7 +87,7 @@ export async function rankProviderModels({
 
   try {
     const rows = await executeSqlFn(
-      `SELECT model_id FROM ai_model_catalog
+      `SELECT model_id FROM catalogo_modelos_ia
        WHERE provider = ${sqlQuote(provider)}
          AND model_id = ${sqlQuote(modelId)}
          AND active = 1 AND supports_text = 1 AND is_free = 1

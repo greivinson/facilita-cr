@@ -2,6 +2,9 @@
   "name": "facilita-ai-fallback",
   "version": "1.0.0",
   "description": "Motor de IA en cascada con rotación de proveedores 100% gratuitos ($0/mes)",
+  "engines": {
+    "node": ">=22.12"
+  },
   "type": "module",
   "main": "index.js",
   "scripts": {

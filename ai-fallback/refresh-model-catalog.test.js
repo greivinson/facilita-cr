@@ -37,7 +37,7 @@ test("upserts successful catalogs and preserves prior rows after provider failur
   }
 
   assert.equal(writes.length, 1);
-  assert.match(writes[0], /UPDATE ai_model_catalog SET active = 0/);
+  assert.match(writes[0], /UPDATE catalogo_modelos_ia SET active = 0/);
   assert.match(writes[0], /'actual-model'/);
   assert.match(writes[0], /'actual-model',\s*1,\s*1,/);
   assert.doesNotMatch(writes[0], /WHERE provider = 'groq'/);
@@ -51,8 +51,8 @@ test("escapes catalog values in SQL and does not add fake models", () => {
     status: "success",
     models: [],
   });
-  assert.match(sql, /UPDATE ai_model_catalog SET active = 0/);
-  assert.doesNotMatch(sql, /INSERT INTO ai_model_catalog\s*\(/);
+  assert.match(sql, /UPDATE catalogo_modelos_ia SET active = 0/);
+  assert.doesNotMatch(sql, /INSERT INTO catalogo_modelos_ia\s*\(/);
 });
 
 test("fails explicitly when no provider catalog can be refreshed", async () => {
