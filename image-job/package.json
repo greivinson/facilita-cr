@@ -1,0 +1,14 @@
+{
+  "name": "facilitacr-image-job",
+  "version": "1.0.0",
+  "description": "Job independiente para procesar manifiestos de imagenes de FacilitaCR",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "type": "module",
+  "scripts": {
+    "download": "node index.js"
+  },
+  "author": "FacilitaCR",
+  "license": "ISC"
+}
